@@ -1,0 +1,30 @@
+name: CI
+
+on: [push]
+
+jobs:
+  goBuild:
+    name: Go build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+      - name: Build
+        run: go mod download && go build -a ./...
+      - name: Test
+        run: go test -v ./...
+
+  goLint:
+    name: Go lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.28.3
