@@ -148,7 +148,11 @@ func (b *Backup) WriteToFile(path string) error {
 		if err != nil {
 			return fmt.Errorf("failed to open source file: %w", err)
 		}
-		f, err := writer.Create(path)
+		internalPath, err := filepath.Rel(b.tempDirPath, path)
+		if err != nil {
+			return fmt.Errorf("failed to work out internal path in archive: %w", err)
+		}
+		f, err := writer.Create(internalPath)
 		if err != nil {
 			return fmt.Errorf("failed to create destination file: %w", err)
 		}
