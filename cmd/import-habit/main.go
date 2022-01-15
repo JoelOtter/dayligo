@@ -20,7 +20,7 @@ func main() {
 			}
 			defer func() {
 				if err := backup.Close(); err != nil {
-					fmt.Printf("Failed to close backup file: %w\n", err)
+					fmt.Printf("Failed to close backup file: %s\n", err.Error())
 				}
 			}()
 			fmt.Printf("Loaded %d day entries, %d goals, %d goal entries.\n", len(backup.DayEntries), len(backup.Goals), len(backup.GoalEntries))
