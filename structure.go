@@ -8,7 +8,7 @@ type Backup struct {
 	DayEntries       []DayEntry        `json:"dayEntries"`
 	Goals            []Goal            `json:"goals"`
 	GoalEntries      []GoalEntry       `json:"goalEntries"`
-	GoalSuccessWeeks []GoalSuccessWeek `json:"GoalSuccessWeeks"`
+	GoalSuccessWeeks []GoalSuccessWeek `json:"goalSuccessWeeks"`
 
 	rawMap      map[string]json.RawMessage
 	tempDirPath string
@@ -43,7 +43,7 @@ type GoalEntry struct {
 }
 
 type Goal struct {
-	CreatedAt       int64  `json:"createdAt"`
+	CreatedAt       int64  `json:"created_at"`
 	ID              int64  `json:"goal_id"`
 	AvatarID        int64  `json:"id_avatar"`
 	ChallengeID     int64  `json:"id_challenge"`
