@@ -9,6 +9,7 @@ type Backup struct {
 	Goals            []Goal            `json:"goals"`
 	GoalEntries      []GoalEntry       `json:"goalEntries"`
 	GoalSuccessWeeks []GoalSuccessWeek `json:"goalSuccessWeeks"`
+	Tags             []Tag             `json:"tags"`
 
 	rawMap      map[string]json.RawMessage
 	tempDirPath string
@@ -66,4 +67,13 @@ type GoalSuccessWeek struct {
 	GoalID        int64 `json:"goal_id"`
 	Week          int64 `json:"week"`
 	Year          int64 `json:"year"`
+}
+
+type Tag struct {
+	CreatedAt int64  `json:"createdAt"`
+	Icon      int64  `json:"icon"`
+	ID        int64  `json:"id"`
+	Name      string `json:"name"`
+	Order     int64  `json:"order"`
+	State     int64  `json:"state"`
 }

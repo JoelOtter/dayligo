@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/JoelOtter/dayligo"
+	"github.com/JoelOtter/dayligo/cmd/import-habit/internal"
 	"github.com/JoelOtter/dayligo/cmd/import-habit/internal/habit"
 	"github.com/spf13/cobra"
 )
@@ -30,6 +31,10 @@ func main() {
 			}
 			for habitName, entries := range habits {
 				fmt.Printf("Found habit \"%s\" with %d entries.\n", habitName, len(entries))
+			}
+
+			if err := internal.ImportGoalsFromHabit(backup, habits); err != nil {
+				return fmt.Errorf("failed to import goals from habit: %w", err)
 			}
 
 			if outputFilePath == "" {

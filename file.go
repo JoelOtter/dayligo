@@ -184,5 +184,6 @@ func getKeyMapping(backup *Backup) map[string]interface{} {
 		"goals":            &backup.Goals,
 		"goalEntries":      &backup.GoalEntries,
 		"goalSuccessWeeks": &backup.GoalSuccessWeeks,
+		"tags":             &backup.Tags,
 	}
 }
