@@ -35,7 +35,8 @@ func ImportGoalsFromHabit(backup *dayligo.Backup, habitEntries map[string][]time
 		}
 	}
 	sort.Slice(goalEntries, func(i, j int) bool {
-		return goalEntries[i].CreatedAt < goalEntries[j].CreatedAt
+		// Newest first
+		return goalEntries[i].CreatedAt > goalEntries[j].CreatedAt
 	})
 
 	// Set goal start dates to earliest Habit entry
@@ -54,7 +55,7 @@ func ImportGoalsFromHabit(backup *dayligo.Backup, habitEntries map[string][]time
 	}
 
 	backup.GoalEntries = goalEntries
-
+	backup.GoalSuccessWeeks = getGoalSuccessWeeks(habitEntries, goalIDMapping)
 	return nil
 }
 
@@ -93,4 +94,44 @@ func getGoalIDForHabit(habitName string, backup *dayligo.Backup) int64 {
 		}
 	}
 	return 0
+}
+
+func getGoalSuccessWeeks(habitDates map[string][]time.Time, habitToGoal map[string]int64) []dayligo.GoalSuccessWeek {
+	var successWeeks []dayligo.GoalSuccessWeek
+	for habit, dates := range habitDates {
+		sort.Slice(dates, func(i, j int) bool {
+			return dates[i].Before(dates[j])
+		})
+		i := 0
+		for _, date := range dates {
+			if date.Weekday() == time.Monday {
+				i = 0
+			}
+			i += 1
+			if date.Weekday() == time.Sunday && i == 7 {
+				// Here I am *assuming* this is ISO week.
+				year, week := date.ISOWeek()
+				successWeeks = append(successWeeks, dayligo.GoalSuccessWeek{
+					CreateAtDay:   int64(date.Day()),
+					CreateAtMonth: int64(date.Month()),
+					CreateAtYear:  int64(date.Year()),
+					GoalID:        habitToGoal[habit],
+					Week:          int64(week),
+					Year:          int64(year),
+				})
+			}
+		}
+	}
+	// Newest first, the lowest goal ID first
+	sort.Slice(successWeeks, func(i, j int) bool {
+		a, b := successWeeks[i], successWeeks[j]
+		if a.Year != b.Year {
+			return a.Year > b.Year
+		}
+		if a.Week != b.Week {
+			return a.Week > b.Week
+		}
+		return a.GoalID < b.GoalID
+	})
+	return successWeeks
 }
