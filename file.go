@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	backupFileName = "backup.daylio"
+	backupFileName       = "backup.daylio"
+	lastSupportedVersion = 18
 )
 
 func ReadBackupFromFile(path string) (*Backup, error) {
@@ -79,6 +80,9 @@ func ReadBackupFromFile(path string) (*Backup, error) {
 	var backup Backup
 	if err := json.Unmarshal(jsonBytes, &backup); err != nil {
 		return nil, fmt.Errorf("failed to parse JSON: %w", err)
+	}
+	if backup.Version != lastSupportedVersion {
+		return nil, fmt.Errorf("only version %d is supported; got %d", lastSupportedVersion, backup.Version)
 	}
 	var rawMap map[string]json.RawMessage
 	if err := json.Unmarshal(jsonBytes, &rawMap); err != nil {

@@ -10,6 +10,7 @@ type Backup struct {
 	GoalEntries      []GoalEntry       `json:"goalEntries"`
 	GoalSuccessWeeks []GoalSuccessWeek `json:"goalSuccessWeeks"`
 	Tags             []Tag             `json:"tags"`
+	Version          int64             `json:"version"`
 
 	rawMap      map[string]json.RawMessage
 	tempDirPath string
